@@ -40,8 +40,21 @@ public class LaboratoryService {
 	private IdWorker idWorker;
 
 
-	public void saveLabItemRelation(String labId,String itemId){
+	/**
+	 * 增加实验室与Item对应的关系
+	 * @param labId
+	 * @param itemId
+	 */
+	public void saveLabItemRelation(String labId,Integer itemId){
 		laboratoryDao.saveLabItemRelation(labId,itemId);
+	}
+
+	/**
+	 * 删除实验室与item的对应关系
+	 * @param labId
+	 */
+	public void deleteRelationByLabId(String labId){
+		laboratoryDao.deleteRelationByLabId(labId);
 	}
 
 
@@ -57,6 +70,14 @@ public class LaboratoryService {
 		return laboratoryDao.findByLabUid(uid);
 	}
 
+	/**
+	 *  根据depart_id查询laboratory列表
+	 * @param depart_id
+	 * @return
+	 */
+	public List<Laboratory> findByDepartId(String depart_id){
+		return laboratoryDao.findByDepartId(depart_id);
+	}
 
 
 	/**

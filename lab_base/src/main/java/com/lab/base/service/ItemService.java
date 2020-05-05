@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 
@@ -28,6 +29,7 @@ import util.IdWorker;
  *
  */
 @Service
+@Transactional
 public class ItemService {
 
 	@Autowired
@@ -86,7 +88,8 @@ public class ItemService {
 	 * @param item
 	 */
 	public void add(Item item) {
-		item.setItemid(idWorker.nextId()+"");// 雪花分布式ID生成器
+
+	//	item.setItemid(idWorker.nextId());// 雪花分布式ID生成器
 		item.setGmtCreate(new Date());
 		item.setGmtUpdate(new Date());
 		itemDao.save(item);

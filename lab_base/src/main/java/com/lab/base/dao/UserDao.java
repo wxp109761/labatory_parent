@@ -14,4 +14,6 @@ public interface UserDao extends JpaSpecificationExecutor<User>, JpaRepository<U
 
     public List<User> findByPermissionNot(String permission);
 
+    public List<User> findByUidNot(String uid);
+
 }

@@ -1,0 +1,20 @@
+server:
+  port: 9011
+spring:
+  application:
+    name: lab-manager
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka/
+  instance:
+    prefer-ip-address: true
+jwt:
+  config:
+    key: wzp109761
+zuul:
+  sensitive-headers: true
+  routes:
+    lab-base:
+      path: /base/**
+      serviceId: lab-base

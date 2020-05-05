@@ -1,4 +1,6 @@
 package com.lab.base.controller;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +9,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.lab.base.pojo.Xjrecord;
 import com.lab.base.pojo.Xjresult;
 import com.lab.base.service.XjrecordService;
+import com.lab.base.service.XjresultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+
+import javax.transaction.Transactional;
+
 /**
  * xjrecord控制器层
  * @author Administrator
@@ -32,6 +38,8 @@ public class XjrecordController {
 
 	@Autowired
 	private XjrecordService xjrecordService;
+
+
 	
 
 	@RequestMapping(value = "/mine/{uid}",method = RequestMethod.GET)
@@ -41,10 +49,6 @@ public class XjrecordController {
 		return new Result(true,StatusCode.OK,"查询成功",map);
 	}
 
-//	@RequestMapping(value = "/add",method = RequestMethod.GET)
-//	public void add(){
-//		xjrecordService.add();
-//	}
 
 	/**
 	 * 查询全部数据
@@ -111,18 +115,21 @@ public class XjrecordController {
 		xjrecordService.update(xjrecord);
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
-	
+
+
+
+	@Autowired
+	XjresultService xjresultService;
 	/**
 	 * 删除
 	 * @param id
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id){
+		xjresultService.deleteByXJId(id);
 		xjrecordService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-
-
 
 	
 }

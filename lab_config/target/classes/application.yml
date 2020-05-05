@@ -1,0 +1,17 @@
+server:
+  port: 12000
+spring:
+  application:
+    name: lab-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/wzp109761/lab-config.git
+  rabbitmq:
+    host: 101.38.27.44
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

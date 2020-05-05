@@ -129,14 +129,5 @@ public class XjresultController {
 		xjresultService.deleteById(rid);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	/**
-	 * 删除
-	 * @param xjid
-	 */
-	@RequestMapping(value="/deleteByXjId/{xjid}",method= RequestMethod.DELETE)
-	public Result deleteByXjId(@PathVariable String xjid){
-		xjresultService.deleteByXJId(xjid);
-		return new Result(true,StatusCode.OK,"删除成功");
-	}
 
 }

@@ -20,12 +20,13 @@ public class DepartController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll(){
-
-
         Map<String,Object> map=new HashMap<>();
         map.put("departList",departService.findAll());
         return new Result(true, StatusCode.OK,"查询成功",map);
     }
+
+
+
 
     @RequestMapping(value = "/{departId}",method = RequestMethod.GET)
     public Result findById(@PathVariable("departId") String departId){

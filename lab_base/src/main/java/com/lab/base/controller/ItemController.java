@@ -101,7 +101,7 @@ public class ItemController {
 	 * @param item
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
-	public Result update(@RequestBody Item item, @PathVariable String itemid ){
+	public Result update(@RequestBody Item item, @PathVariable Integer itemid ){
 		item.setItemid(itemid);
 		itemService.update(item);
 		return new Result(true,StatusCode.OK,"修改成功");

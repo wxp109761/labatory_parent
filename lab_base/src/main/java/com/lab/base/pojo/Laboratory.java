@@ -31,6 +31,18 @@ public class Laboratory implements Serializable{
 	@Column(name = "state")
 	private String state;//状态，0，1，2建设中，运行，废弃
 
+	public String getDepartId() {
+		return departId;
+	}
+
+	public void setDepartId(String departId) {
+		this.departId = departId;
+	}
+
+	@Column(name = "depart_id")
+	private String departId;//状态，0，1，2建设中，运行，废弃
+
+
 
 	@Column(name = "function")
 	private String function;//功能：描述
@@ -153,18 +165,18 @@ public class Laboratory implements Serializable{
 //		this.user = user;
 //	}
 
-	@ManyToOne(targetEntity =Depart.class)
-	@JsonBackReference
-	@JoinColumn(name ="depart_id")
-	private Depart depart;
-
-	public Depart getDepart() {
-		return depart;
-	}
-
-	public void setDepart(Depart depart) {
-		this.depart = depart;
-	}
+//	@ManyToOne(targetEntity =Depart.class)
+//	@JsonBackReference
+//	@JoinColumn(name ="depart_id")
+//	private Depart depart;
+//
+//	public Depart getDepart() {
+//		return depart;
+//	}
+//
+//	public void setDepart(Depart depart) {
+//		this.depart = depart;
+//	}
 
 	@Override
 	public String toString() {
@@ -179,7 +191,7 @@ public class Laboratory implements Serializable{
 				", gmtCreate=" + gmtCreate +
 				", gmtUpdate=" + gmtUpdate +
 				", items=" + items +
-				", depart=" + depart +
+//				", depart=" + depart +
 				'}';
 	}
 }

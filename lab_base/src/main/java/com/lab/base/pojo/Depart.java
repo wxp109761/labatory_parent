@@ -55,20 +55,20 @@ public class Depart implements Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-    @OneToMany(mappedBy = "depart",cascade=CascadeType.REFRESH,fetch=FetchType.EAGER)
-    //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
-    //拥有mappedBy注解的实体类为关系被维护端
-    //mappedBy="author"中的author是Article中的author属性
-    private List<Laboratory> laboratoryList;//文章列表
-
-    public List<Laboratory> getLaboratoryList() {
-        return laboratoryList;
-    }
-
-    public void setLaboratoryList(List<Laboratory> laboratoryList) {
-        this.laboratoryList = laboratoryList;
-    }
-
+//    @OneToMany(mappedBy = "depart",cascade=CascadeType.REFRESH,fetch=FetchType.EAGER)
+//    //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
+//    //拥有mappedBy注解的实体类为关系被维护端
+//    //mappedBy="author"中的author是Article中的author属性
+//    private List<Laboratory> laboratoryList;//文章列表
+//
+//    public List<Laboratory> getLaboratoryList() {
+//        return laboratoryList;
+//    }
+//
+//    public void setLaboratoryList(List<Laboratory> laboratoryList) {
+//        this.laboratoryList = laboratoryList;
+//    }
+//
 
 
     @Override
@@ -78,7 +78,7 @@ public class Depart implements Serializable {
                 ", depart_name='" + depart_name + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtUpdate=" + gmtUpdate +
-                ", laboratoryList=" + laboratoryList +
+//                ", laboratoryList=" + laboratoryList +
                 '}';
     }
 }

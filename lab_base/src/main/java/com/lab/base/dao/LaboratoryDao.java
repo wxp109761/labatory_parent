@@ -19,5 +19,11 @@ public interface LaboratoryDao extends JpaRepository<Laboratory,String>,JpaSpeci
 
    @Modifying
    @Query(value = "INSERT INTO sys_lab_item VALUES(?1, ?2)", nativeQuery = true)
-   void saveLabItemRelation(String labId, String itemId);
+   void saveLabItemRelation(String labId, Integer itemId);
+
+   @Modifying
+   @Query(value = "delete from  sys_lab_item where sys_lab_id=?1", nativeQuery = true)
+   void deleteRelationByLabId(String labId);
+
+   public List<Laboratory> findByDepartId(String departId);
 }

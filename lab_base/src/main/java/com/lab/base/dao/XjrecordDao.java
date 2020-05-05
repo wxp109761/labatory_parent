@@ -19,4 +19,8 @@ public interface XjrecordDao extends JpaRepository<Xjrecord,String>,JpaSpecifica
 
     @Query(value = "SELECT a.xjid,b.label,a.state,a.gmt_update,a.gmt_create from xjrecord AS a LEFT JOIN laboratory AS b ON a.labid=b.labid WHERE a.xjr_uid=? ORDER BY a.gmt_create DESC",nativeQuery = true)
     public List<Map> QueryRecords(String uid);
+
+    public void deleteByLabid(String labid);
+    public List<Xjrecord> findByLabid(String labid);
+
 }

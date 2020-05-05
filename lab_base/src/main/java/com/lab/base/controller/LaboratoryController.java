@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.lab.base.pojo.Laboratory;
+import com.lab.base.pojo.Xjrecord;
 import com.lab.base.service.LaboratoryService;
+import com.lab.base.service.XjrecordService;
+import com.lab.base.service.XjresultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,17 +34,66 @@ public class LaboratoryController {
 
 	@Autowired
 	private LaboratoryService laboratoryService;
+	@Autowired
+	private XjresultService xjresultService;
+	@Autowired
+	private XjrecordService xjrecordService;
 
 	@RequestMapping(value = "/addLabItemRelations/{labId}/{itemId}",method=RequestMethod.POST)
-	public Result addLabItemRelation(@PathVariable String labId,@PathVariable String itemId){
-		laboratoryService.saveLabItemRelation(labId,itemId);
+	public Result addLabItemRelation(@PathVariable String labId,@PathVariable Integer itemId){
 		return new Result(true,StatusCode.OK,"增加成功");
+	}
+    /**
+     * 增加
+     */
+    @RequestMapping(method=RequestMethod.POST)
+    public Result add(@RequestBody Laboratory laboratory){
+        laboratoryService.add(laboratory);
+        return new Result(true,StatusCode.OK,"增加成功");
+    }
+
+
+
+    /**
+	 * 删除实验室及其相关的内容
+	 * @param labid
+	 */
+	@RequestMapping(value="/{labid}",method= RequestMethod.DELETE)
+	public Result delete(@PathVariable String labid){
+
+		List<Xjrecord> entity=xjrecordService.findXJRecordByLabId(labid);
+		for (int i = 0; i <entity.size() ; i++) {
+			xjresultService.deleteByXJId(entity.get(i).getXjid());
+		}
+		xjrecordService.deleteXJRecordByLabId(labid);
+		laboratoryService.deleteRelationByLabId(labid);
+		laboratoryService.deleteById(labid);
+		return new Result(true,StatusCode.OK,"删除成功");
 	}
 
 
 	@RequestMapping(value = "/mine/{uid}",method = RequestMethod.GET)
 	public Result findByUid(@PathVariable String uid){
-		return new Result(true,StatusCode.OK,"查询成功",laboratoryService.findByUid(uid));
+		Map<String,Object> map=new HashMap<>();
+		map.put("labList",laboratoryService.findByUid(uid));
+		return new Result(true,StatusCode.OK,"查询成功",map);
+	}
+	@RequestMapping(value = "/byDepartId/{depart_id}",method = RequestMethod.GET)
+	public Result findByDepart_id(@PathVariable String depart_id){
+		Map<String,Object> map=new HashMap<>();
+		map.put("labList",laboratoryService.findByDepartId(depart_id));
+		return new Result(true,StatusCode.OK,"查询成功",map);
+	}
+	/**
+	 * 查询全部数据
+	 * @return
+	 */
+	@RequestMapping(method= RequestMethod.GET)
+	public Result findAll(){
+		Map<String,Object> map=new HashMap<>();
+		map.put("labList",laboratoryService.findAll());
+		return new Result(true,StatusCode.OK,"查询成功",map);
+
 	}
 
 
@@ -57,14 +109,7 @@ public class LaboratoryController {
 
 	}
 
-	/**
-	 * 查询全部数据
-	 * @return
-	 */
-	@RequestMapping(method= RequestMethod.GET)
-	public Result findAll(){
-		return new Result(true,StatusCode.OK,"查询成功",laboratoryService.findAll());
-	}
+
 	
 	/**
 	 * 根据ID查询
@@ -100,15 +145,7 @@ public class LaboratoryController {
         return new Result(true,StatusCode.OK,"查询成功",laboratoryService.findSearch(searchMap));
     }
 	
-	/**
-	 * 增加
-	 */
-	@RequestMapping(method=RequestMethod.POST)
-	public Result add(@RequestBody Laboratory laboratory){
-		laboratoryService.add(laboratory);
-		return new Result(true,StatusCode.OK,"增加成功");
-	}
-	
+
 	/**
 	 * 修改
 	 * @param laboratory
@@ -120,14 +157,6 @@ public class LaboratoryController {
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
 	
-	/**
-	 * 删除
-	 * @param labid
-	 */
-	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
-	public Result delete(@PathVariable String labid){
-		laboratoryService.deleteById(labid);
-		return new Result(true,StatusCode.OK,"删除成功");
-	}
+
 	
 }

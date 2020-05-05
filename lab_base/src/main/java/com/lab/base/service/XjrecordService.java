@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 /**
@@ -29,6 +30,7 @@ import util.IdWorker;
  *
  */
 @Service
+@Transactional
 public class XjrecordService {
 
 	@Autowired
@@ -45,32 +47,6 @@ public class XjrecordService {
 	public List<Map> QueryRecordsByUid(String uid){
 		return  xjrecordDao.QueryRecords(uid);
 	}
-
-
-
-//	public void add(){
-//		Xjrecord xjrecord=new Xjrecord();
-//		xjrecord.setXjid("xj9");
-//		xjrecord.setState("安全");
-//		xjrecord.setXjrUid("78714725654990848");
-//		xjrecord.setGmtCreate(new Date());
-//
-//		Item item1 = new Item();
-//		item1.setItemid(10);
-//		item1.setItemname("是否漏电");
-//		item1.setBelong("1080");
-//		Item item = new Item();
-//		item.setItemid(11);
-//		item.setItemname("火灾隐患是否存在");
-//		item.setBelong("1070");
-//
-//		//配置用户到角色关系，可以对中间表中的数据进行维护     1-1
-//		xjrecord.getItemList().add(item1);
-//		//xjrecord.getItems().add(item);
-//		//配置角色到用户的关系，可以对中间表的数据进行维护     1-1
-//		//role.getUsers().add(user)
-//		xjrecordDao.save(xjrecord);
-//	}
 
 
 
@@ -122,6 +98,7 @@ public class XjrecordService {
 	 */
 	public void add(Xjrecord xjrecord) {
 		// xjrecord.setXjid( idWorker.nextId()+"" ); 雪花分布式ID生成器
+		xjrecord.setGmtCreate(new Date());
 		xjrecordDao.save(xjrecord);
 	}
 
@@ -141,6 +118,16 @@ public class XjrecordService {
 		xjrecordDao.deleteById(xjid);
 	}
 
+	/**
+	 * 根据labid删除
+	 * @param labid
+	 */
+	public void deleteXJRecordByLabId(String labid) {
+		xjrecordDao.deleteByLabid(labid);
+	}
+	public List<Xjrecord> findXJRecordByLabId(String labid) {
+		return xjrecordDao.findByLabid(labid);
+	}
 	/**
 	 * 动态条件构建
 	 * @param searchMap

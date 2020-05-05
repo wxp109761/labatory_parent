@@ -66,6 +66,14 @@ public class UserController {
         return new Result(true, StatusCode.OK,"查询成功",map);
     }
 
+    @RequestMapping(value = "/exceptSelf/{uid}",method = RequestMethod.GET)
+    public Result findUserExceptSelf(@PathVariable String uid){
+        Map<String,Object> map=new HashMap<>();
+        map.put("userList", userService.findAllExceptSelf(uid));
+        return new Result(true, StatusCode.OK,"查询成功",map);
+    }
+
+
     /**
      * 注册用户
      * @return
@@ -117,7 +125,10 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll(){
-        return new Result(true, StatusCode.OK,"查询成功",userService.findAll());
+
+        Map<String,Object> map=new HashMap<>();
+        map.put("userList",userService.findAll());
+        return new Result(true, StatusCode.OK,"查询成功",map);
     }
 
     @RequestMapping(value = "/{uid}",method = RequestMethod.GET)

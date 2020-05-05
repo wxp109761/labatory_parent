@@ -21,7 +21,8 @@ public class Item implements Serializable{
 
 	@Id
 	@Column(name = "itemid")
-	private String itemid;//itemid
+	@GeneratedValue(strategy=GenerationType.IDENTITY)//自增
+	private Integer itemid;//itemid
 
 
 	@Column(name = "itemname")
@@ -33,11 +34,11 @@ public class Item implements Serializable{
 	@Column(name = "gmt_update")
 	private java.util.Date gmtUpdate;//gmt_update
 
-	public String getItemid() {
+	public Integer getItemid() {
 		return itemid;
 	}
 
-	public void setItemid(String itemid) {
+	public void setItemid(Integer itemid) {
 		this.itemid = itemid;
 	}
 

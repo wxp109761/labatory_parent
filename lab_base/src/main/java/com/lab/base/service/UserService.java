@@ -94,7 +94,9 @@ public class UserService {
     public List<User> findAll(){
         return userDao.findAll();
     }
-
+    public List<User> findAllExceptSelf(String uid){
+        return userDao.findByUidNot(uid);
+    }
     public User findById(String uid){
         return userDao.findById(uid).get();
     }
