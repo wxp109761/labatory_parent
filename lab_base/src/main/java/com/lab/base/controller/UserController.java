@@ -1,16 +1,22 @@
 package com.lab.base.controller;
 
 import com.lab.base.pojo.User;
+import com.lab.base.service.LaboratoryService;
 import com.lab.base.service.UserService;
 
+import com.lab.base.service.XjrecordService;
+import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import util.IdWorker;
 import util.JwtUtil;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +36,10 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-
+    @Autowired
+    private LaboratoryService laboratoryService;
+    @Autowired
+    private XjrecordService xjrecordService;
     /**
      * 发送短信验证码
      * @return
@@ -106,6 +114,7 @@ public class UserController {
         }
         //使用前后端可以通话的操作，采用JWT方式来实现
         //生成令牌
+
         String token=jwtUtil.createJWT(userlogin.getUid(),user.getJobNumber(),"user");
         Map<String,Object> map=new HashMap<>();
         map.put("token",token);
@@ -117,6 +126,7 @@ public class UserController {
         map.put("departId",userlogin.getDepartId());
         map.put("permission",userlogin.getPermission());
         map.put("tel",userlogin.getTel());
+        map.put("avatarUrl",userlogin.getAvatarUrl());
         map.put("gmt_create",userlogin.getGmtCreate());
         map.put("gmt_update",userlogin.getGmtUpdate());
         return new Result(true, StatusCode.OK,"登录成功",map);
@@ -140,9 +150,32 @@ public class UserController {
         userService.add(user);
         return new Result(true, StatusCode.OK,"添加成功");
     }
+
     @RequestMapping(value = "/{uid}",method = RequestMethod.PUT)
     public Result update(@PathVariable("uid") String uid, @RequestBody User user){
         user.setUid(uid);
+        User userInfo=userService.findById(uid);
+        user.setPermission(userInfo.getPermission());
+        user.setJobNumber(userInfo.getJobNumber());
+        user.setGmtCreate(userInfo.getGmtUpdate());
+        user.setGmtUpdate(new Date());
+        if(user.getPassword()==null||user.getPassword().equals("")){
+            user.setPassword(userInfo.getPassword());
+        }
+        if(user.getDepartId()==null||user.getDepartId().equals("")){
+            user.setDepartId(userInfo.getDepartId());
+        }
+        if(user.getUsername()==null||user.getUsername().equals("")){
+            user.setUsername(userInfo.getUsername());
+        }
+        if(user.getTel()==null||user.getTel().equals("")){
+            user.setTel(userInfo.getTel()   );
+        }
+        if(user.getAvatarUrl()==null||user.getAvatarUrl().equals("")){
+            user.setAvatarUrl(userInfo.getAvatarUrl());
+        }
+
+
         userService.update(user);
         return new Result(true, StatusCode.OK,"修改成功");
     }
@@ -150,6 +183,16 @@ public class UserController {
     public Result deleteById(@PathVariable("uid") String uid){
         userService.deleteById(uid);
         return new Result(true, StatusCode.OK,"删除成功");
+    }
+
+
+    @RequestMapping(value="/search",method = RequestMethod.POST)
+    public Result findSearch( @RequestBody Map searchMap){
+        Map<String,Object> map=new HashMap<>();
+        map.put("useList",userService.findSearch(searchMap));
+        map.put("labList",laboratoryService.findSearch(searchMap));
+        map.put("recordlist",xjrecordService.findSearch(searchMap));
+        return new Result(true,StatusCode.OK,"查询成功",map);
     }
 
 

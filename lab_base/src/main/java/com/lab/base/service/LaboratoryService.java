@@ -194,7 +194,7 @@ public class LaboratoryService {
 					predicateList.add(cb.like(root.get("depart_id").as(String.class), "%"+(String)searchMap.get("depart_id")+"%"));
 				}
 				
-				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
+				return cb.or( predicateList.toArray(new Predicate[predicateList.size()]));
 
 			}
 		};

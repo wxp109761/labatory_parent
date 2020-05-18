@@ -30,6 +30,18 @@ public class User implements Serializable {
     private String permission;
 
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+
     @Column(name = "gmt_create")
     private java.util.Date gmtCreate;//gmt_create
     @Column(name = "gmt_update")

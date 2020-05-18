@@ -44,13 +44,18 @@ public class LaboratoryController {
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
     /**
-     * 增加
+     *
+	 *  增加
      */
     @RequestMapping(method=RequestMethod.POST)
     public Result add(@RequestBody Laboratory laboratory){
         laboratoryService.add(laboratory);
         return new Result(true,StatusCode.OK,"增加成功");
     }
+
+
+
+
 
 
 

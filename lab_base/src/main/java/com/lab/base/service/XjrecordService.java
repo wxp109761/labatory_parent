@@ -50,6 +50,21 @@ public class XjrecordService {
 
 
 
+	public List<Object> getXjRecordExcel(String uid, String labId, String date1,String date2,String cate){
+		if(cate.equals("byLabId")){
+			return xjrecordDao.getRecordsByLaId(uid,labId);
+		}else 	if(cate.equals("byDate")){
+			return xjrecordDao.getRecordsByDate(uid,date1,date2);
+		}else 	if(cate.equals("byLabIdAndDate")){
+			return xjrecordDao.getRecordsByLabIdAndDate(uid,labId,date1,date2);
+		}else {
+			return xjrecordDao.getAllRecords(uid);
+		}
+
+	}
+
+
+
 	/**
 	 * 查询全部列表
 	 * @return
@@ -134,9 +149,7 @@ public class XjrecordService {
 	 * @return
 	 */
 	private Specification<Xjrecord> createSpecification(Map searchMap) {
-
 		return new Specification<Xjrecord>() {
-
 			@Override
 			public Predicate toPredicate(Root<Xjrecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicateList = new ArrayList<Predicate>();
@@ -156,8 +169,7 @@ public class XjrecordService {
                 if (searchMap.get("state")!=null && !"".equals(searchMap.get("state"))) {
                 	predicateList.add(cb.like(root.get("state").as(String.class), "%"+(String)searchMap.get("state")+"%"));
                 }
-				
-				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
+				return cb.or( predicateList.toArray(new Predicate[predicateList.size()]));
 
 			}
 		};

@@ -2,19 +2,31 @@ package com.lab.base.service;
 
 
 import com.lab.base.dao.UserDao;
-import com.lab.base.dao.XjrecordDao;
+
 import com.lab.base.pojo.User;
-import com.lab.base.pojo.Xjrecord;
+
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 import util.JwtUtil;
+
+import java.util.ArrayList;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -74,7 +86,6 @@ public class UserService {
     public User login(User user) {
         //先根据用户名查询对象
         User userLogin=userDao.findByJobNumber(user.getJobNumber());
-        System.out.println(userLogin+"xxxx");
         if(userLogin!=null&&encoder.matches(user.getPassword(),userLogin.getPassword())){
             return userLogin;
         }
@@ -112,7 +123,6 @@ public class UserService {
     }
     public void deleteById(String uid){
         String header=request.getHeader("Authorization");
-        System.out.println(header+"xxx");
         if(header==null||"".equals(header)){
             throw  new RuntimeException("权限不足");
         }
@@ -131,6 +141,66 @@ public class UserService {
             throw  new RuntimeException("权限不足");
         }
         userDao.deleteById(uid);
+    }
+
+    /**
+     * 条件查询
+     * @param whereMap
+     * @return
+     */
+    public List<User> findSearch(Map whereMap) {
+        Specification<User> specification = createSpecification(whereMap);
+        return userDao.findAll(specification);
+    }
+
+    /**
+     * 动态条件构建
+     * @param searchMap
+     * @return
+     */
+    private Specification<User> createSpecification(Map searchMap) {
+
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicateList = new ArrayList<Predicate>();
+                // uid
+                if (searchMap.get("uid")!=null && !"".equals(searchMap.get("uid"))) {
+                    predicateList.add(cb.like(root.get("uid").as(String.class), "%"+(String)searchMap.get("uid")+"%"));
+                }
+                // job_number
+                if (searchMap.get("jobNumber")!=null && !"".equals(searchMap.get("jobNumber"))) {
+                    predicateList.add(cb.like(root.get("jobNumber").as(String.class), "%"+(String)searchMap.get("jobNumber")+"%"));
+                }
+                // password
+                if (searchMap.get("password")!=null && !"".equals(searchMap.get("password"))) {
+                    predicateList.add(cb.like(root.get("password").as(String.class), "%"+(String)searchMap.get("password")+"%"));
+                }
+                // username
+                if (searchMap.get("username")!=null && !"".equals(searchMap.get("username"))) {
+                    predicateList.add(cb.like(root.get("username").as(String.class), "%"+(String)searchMap.get("username")+"%"));
+                }
+                // depart_id
+                if (searchMap.get("departId")!=null && !"".equals(searchMap.get("departId"))) {
+                    predicateList.add(cb.like(root.get("departId").as(String.class), "%"+(String)searchMap.get("departId")+"%"));
+                }
+                // tel
+                if (searchMap.get("tel")!=null && !"".equals(searchMap.get("tel"))) {
+                    predicateList.add(cb.like(root.get("tel").as(String.class), "%"+(String)searchMap.get("tel")+"%"));
+                }
+                // permission
+                if (searchMap.get("permission")!=null && !"".equals(searchMap.get("permission"))) {
+                    predicateList.add(cb.like(root.get("permission").as(String.class), "%"+(String)searchMap.get("permission")+"%"));
+                }
+                // avatar_url
+                if (searchMap.get("avatarUrl")!=null && !"".equals(searchMap.get("avatarUrl"))) {
+                    predicateList.add(cb.like(root.get("avatarUrl").as(String.class), "%"+(String)searchMap.get("avatarUrl")+"%"));
+                }
+                return cb.or( predicateList.toArray(new Predicate[predicateList.size()]));
+
+            }
+        };
+
     }
 
 
